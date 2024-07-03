@@ -2,12 +2,15 @@
 """
 0x01. Lockboxes
 """
+
+
 def canUnlockAll(boxes):
     """
     Determines if all the boxes can be opened.
 
     Args:
-        boxes (list of lists): A list of lists, where each inner list represents the keys inside a box.
+        boxes (list of lists): A list of lists,
+        where each inner list represents the keys inside a box.
 
     Returns:
         bool: True if all boxes can be opened, False otherwise.
