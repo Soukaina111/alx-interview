@@ -1,29 +1,32 @@
 #!/usr/bin/python3
-""" This script calculates the minimum operations
-required to generate a string of length 'n'
-consisting entirely of 'H' characters.
+
+"""
+Defines a function to calculate the minimum number of operations needed to form a string of 'n' 'H' characters.
+Two operations are allowed: duplicating the entire string ('Copy All') and appending the last character to itself ('Paste').
+If 'n' cannot be achieved, returns 0.
 """
 
 
-def min_operations(n: int) -> int:
+def minOperations(n):
     """
-    Calculate the minimum operations needed to
-    create a string of 'n' 'H' characters.
+    Calculates the minimum operations to form a string of 'n' 'H' characters.
 
     Parameters:
-    - n: An integer representing the desired length of the string.
+    - n: Desired length of the string.
 
     Returns:
-    - An integer representing the minimum number of operations required.
+    - Minimum number of operations required. Returns 0 if 'n' is unachievable.
     """
     if n <= 1:
         return 0
-    num, idx, opera = n, 2, 0
 
-    while num > 1:
-        if num % idx == 0:
-            num = num / idx
-            opera = opera + idx
+    remaining_length, divisor, operation_count = n, 2, 0
+
+    while remaining_length > 1:
+        if remaining_length % divisor == 0:
+            remaining_length /= divisor
+            operation_count += divisor
         else:
-            idx += 1
-    return opera
+            divisor += 1
+
+    return operation_count
