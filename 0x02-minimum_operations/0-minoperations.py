@@ -16,18 +16,14 @@ def min_operations(n: int) -> int:
     Returns:
     - An integer representing the minimum number of operations required.
     """
-    next = 'H'
-    mid = 'H'
-    opera = 0
-    st = len(mid)
-    while (st < n):
-        if n % st == 0:
-            opera += 2
-            next = mid
-            mid += mid
-        else:
-            opera += 1
-            mid += next
-    if st != n:
+    if n <= 1:
         return 0
+    num, idx, opera = n, 2, 0
+
+    while num > 1:
+        if num % idx == 0:
+            num = num / idx
+            opera = opera + idx
+        else:
+            idx += 1
     return opera
