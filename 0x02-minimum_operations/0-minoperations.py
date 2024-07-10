@@ -16,17 +16,18 @@ def min_operations(n: int) -> int:
     Returns:
     - An integer representing the minimum number of operations required.
     """
-    next_char = 'H'
-    accumulated_string = 'H'
+    next = 'H'
+    mid = 'H'
     opera = 0
-    while (len(accumulated_string) < n):
-        if n % len(accumulated_string) == 0:
+    st = len(mid)
+    while (st < n):
+        if n % st == 0:
             opera += 2
-            next_char = accumulated_string
-            accumulated_string += accumulated_string
+            next = mid
+            mid += mid
         else:
             opera += 1
-            accumulated_string += next_char
-    if len(accumulated_string) != n:
+            mid += next
+    if st != n:
         return 0
     return opera
