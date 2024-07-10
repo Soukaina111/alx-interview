@@ -1,38 +1,34 @@
 #!/usr/bin/python3
-"""
-ALX- interview Minimum Operations
+""" This script calculates the minimum operations
+required to generate a string of length 'n'
+consisting entirely of 'H' characters.
 """
 
-
-def minOperations(n: int) -> int:
+def min_operations(n: int) -> int:
     """
-    Minimum Operations needed to get n H characters.
+    Calculate the minimum operations needed to create a string of 'n' 'H' characters.
 
-    Args:
-        n (int): The target number of H characters to achieve.
+    Parameters:
+    - n: An integer representing the desired length of the string.
 
     Returns:
-        int: The minimum number of operations needed to get n H characters.
-        If the target number is impossible to achieve, it returns 0.
+    - An integer representing the minimum number of operations required.
     """
-    current_num_H = 'H'  # Start with a single 'H' character
-    clipboard_contents = 'H'  # Initially, the clipboard contains a single 'H'
-    num_operations = 0  # Initialize the number of operations to 0
+    next_char = 'H'
+    accumulated_string = 'H'
+    operation_count = 0
 
-    # Iterate until the current number of H characters is equal to the target
-    for _ in range(n):
-        if n % len(current_num_H) == 0:
-            # Copy all the H characters and paste them
-            num_operations += 2
-            clipboard_contents = current_num_H
-            current_num_H += current_num_H
+    # Loop until the accumulated string reaches the target length 'n'.
+    while len(accumulated_string) < n:
+        if n % len(accumulated_string) == 0:
+            operation_count += 2
+            next_char = accumulated_string
+            accumulated_string += accumulated_string
         else:
-            # Copy and paste one more H character
-            num_operations += 1
-            current_num_H += clipboard_contents
+            operation_count += 1
+            accumulated_string += next_char
 
-    # If the final number of H characters is not equal to the target, return 0
-    if len(current_num_H) != n:
+    if len(accumulated_string) != n:
         return 0
 
-    return num_operations
+    return operation_count
