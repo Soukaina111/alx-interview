@@ -1,8 +1,10 @@
 #!/usr/bin/python3
 
 """
-Defines a function to calculate the minimum number of operations needed to form a string of 'n' 'H' characters.
-Two operations are allowed: duplicating the entire string ('Copy All') and appending the last character to itself ('Paste').
+Defines a function to calculate the minimum number
+of operations needed to form a string of 'n' 'H' characters.
+Two operations are allowed: duplicating the entire string
+('Copy All') and appending the last character to itself ('Paste').
 If 'n' cannot be achieved, returns 0.
 """
 
