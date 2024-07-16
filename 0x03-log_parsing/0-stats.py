@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 """
-Log parsing script that reads from stdin, processes log entries
-and prints statistics about file sizes and HTTP status codes.
+Log parsing script that reads from stdin, processes log entries, and prints statistics about file sizes and HTTP status codes.
 """
 
 import sys
+
 
 
 def main():
@@ -31,22 +31,22 @@ def main():
             count += 1
             data = line.split()
 
-            # Attempt to extract and increment the status code count
-            try:
-                status_code = data[-2]
-                if status_code in stats:
-                    stats[status_code] += 1
-            except Exception as e:
-                print(f"Error extracting status code: {e}", file=sys.stderr)
+            # Validate and parse the line
+            if len(data) >= 6 and data[0].isdigit() and data[1] == '-' and data[2].startswith('[') and data[3].endswith('"') and data[4].isdigit():
+                try:
+                    status_code = data[5]
+                    if status_code in stats:
+                        stats[status_code] += 1
+                except Exception as e:
+                    print(f"Error extracting status code: {e}", file=sys.stderr)
 
-            # Attempt to extract and increment the file size
-            try:
-                filesize += int(data[-1])
-            except Exception as e:
-                print(f"Error converting file size: {e}", file=sys.stderr)
+                try:
+                    filesize += int(data[6])
+                except Exception as e:
+                    print(f"Error converting file size: {e}", file=sys.stderr)
 
             # Print statistics every 10 lines
-            if count % 10 == 0:
+            if count % 10 == 0 or sys.stdin.closed:
                 print_stats(stats, filesize)
                 
         # Ensure final statistics are printed
