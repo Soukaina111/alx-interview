@@ -4,58 +4,51 @@ This script parses log files and generates statistics on the HTTP status codes a
 """
 
 import sys
-from collections import defaultdict
-
-def parse_log_line(line):
-    """
-    Parse a single log line and extract the status code and file size.
-    """
-    data = line.split()
-    try:
-        status_code = data[-2]
-        file_size = int(data[-1])
-        return status_code, file_size
-    except (IndexError, ValueError):
-        return None, None
-
-def update_statistics(status_code, file_size, status_code_counts, total_file_size):
-    """
-    Update the status code counts and total file size.
-    """
-    if status_code:
-        status_code_counts[status_code] += 1
-    if file_size:
-        total_file_size += file_size
-    return total_file_size
-
-def print_statistics(status_code_counts, total_file_size):
-    """
-    Print the final statistics.
-    """
-    print(f"Total file size: {total_file_size}")
-    for status_code, count in sorted(status_code_counts.items()):
-        if count:
-            print(f"{status_code}: {count}")
-
-def main():
-    """
-    Main function to process log data and generate statistics.
-    """
-    status_code_counts = defaultdict(int)
-    total_file_size = 0
-    line_count = 0
-
-    try:
-        for line in sys.stdin:
-            line_count += 1
-            status_code, file_size = parse_log_line(line)
-            total_file_size = update_statistics(status_code, file_size, status_code_counts, total_file_size)
-            if line_count % 10 == 0:
-                print_statistics(status_code_counts, total_file_size)
-        print_statistics(status_code_counts, total_file_size)
-    except KeyboardInterrupt:
-        print_statistics(status_code_counts, total_file_size)
-        raise
 
 if __name__ == '__main__':
-    main()
+    # Initialize variables to track total file size and count of lines processed
+    total_file_size, line_count = 0, 0
+
+    # Define a list of HTTP status codes to track
+    status_codes = ["200", "301", "400", "401", "403", "404", "405", "500"]
+
+    # Create a dictionary to store the count of each status code
+    status_code_counts = {code: 0 for code in status_codes}
+
+    # Define a function to print the final statistics
+    def print_statistics(status_code_counts: dict, total_file_size: int) -> None:
+        print("Total file size: {:d}".format(total_file_size))
+        for code, count in sorted(status_code_counts.items()):
+            if count:
+                print("{}: {}".format(code, count))
+
+    try:
+        # Process each line from stdin
+        for line in sys.stdin:
+            line_count += 1
+            data = line.split()
+            try:
+                # Extract the HTTP status code from the log line
+                status_code = data[-2]
+                if status_code in status_code_counts:
+                    # Increment the count for the corresponding status code
+                    status_code_counts[status_code] += 1
+            except BaseException:
+                # Ignore any errors parsing the status code
+                pass
+            try:
+                # Extract the file size from the log line and add it to the total
+                file_size = int(data[-1])
+                total_file_size += file_size
+            except BaseException:
+                # Ignore any errors parsing the file size
+                pass
+            # Print the statistics every 10 lines
+            if line_count % 10 == 0:
+                print_statistics(status_code_counts, total_file_size)
+        # Print the final statistics
+        print_statistics(status_code_counts, total_file_size)
+    except KeyboardInterrupt:
+        # Print the statistics and exit if the user interrupts the script
+        print_statistics(status_code_counts, total_file_size)
+        raise
