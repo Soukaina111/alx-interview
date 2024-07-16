@@ -1,57 +1,61 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 """
-Log parsing script that reads from stdin, processes log entries,
-and prints statistics about file sizes and HTTP status codes.
+This script parses log files and generates statistics on the HTTP status codes and total file size.
 """
 
 import sys
+from collections import defaultdict
 
+def parse_log_line(line):
+    """
+    Parse a single log line and extract the status code and file size.
+    """
+    data = line.split()
+    try:
+        status_code = data[-2]
+        file_size = int(data[-1])
+        return status_code, file_size
+    except (IndexError, ValueError):
+        return None, None
+
+def update_statistics(status_code, file_size, status_code_counts, total_file_size):
+    """
+    Update the status code counts and total file size.
+    """
+    if status_code:
+        status_code_counts[status_code] += 1
+    if file_size:
+        total_file_size += file_size
+    return total_file_size
+
+def print_statistics(status_code_counts, total_file_size):
+    """
+    Print the final statistics.
+    """
+    print(f"Total file size: {total_file_size}")
+    for status_code, count in sorted(status_code_counts.items()):
+        if count:
+            print(f"{status_code}: {count}")
 
 def main():
     """
-    Main function to handle log parsing and statistics computation.
+    Main function to process log data and generate statistics.
     """
-    total_file_size, line_count = 0, 0
-    http_status_codes = ["200", "301", "400", "401",
-            "403", "404", "405", "500"]
-    status_code_counts = {code: 0 for code in http_status_codes}
-
-    def display_statistics(total_file_size: int, status_code_counts: dict) -> None:
-        """
-        Displays the current statistics about total file size and status code counts.
-        """
-        print(f"Total file size: {total_file_size}")
-        for status_code, count in sorted(status_code_counts.items()):
-            if count > 0:
-                print(f"{status_code}: {count}")
+    status_code_counts = defaultdict(int)
+    total_file_size = 0
+    line_count = 0
 
     try:
         for line in sys.stdin:
             line_count += 1
-            log_entries = line.split()
-
-            try:
-                extracted_status_code = log_entries[-2]
-                if extracted_status_code in status_code_counts:
-                    status_code_counts[extracted_status_code] += 1
-            except Exception as e:
-                print(f"Error extracting status code: {e}", file=sys.stderr)
-
-            try:
-                total_file_size += int(log_entries[-1])
-            except Exception as e:
-                print(f"Error updating total file size: {e}", file=sys.stderr)
-
-            if line_count % 10 == 0 or sys.stdin.closed:
-                display_statistics(total_file_size, status_code_counts)
-                
-        display_statistics(total_file_size, status_code_counts)
+            status_code, file_size = parse_log_line(line)
+            total_file_size = update_statistics(status_code, file_size, status_code_counts, total_file_size)
+            if line_count % 10 == 0:
+                print_statistics(status_code_counts, total_file_size)
+        print_statistics(status_code_counts, total_file_size)
     except KeyboardInterrupt:
-        print("\nStatistics up to the last full set of 10 lines:")
-        display_statistics(total_file_size, status_code_counts)
-        print("\nOperation interrupted by user.")
+        print_statistics(status_code_counts, total_file_size)
         raise
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
