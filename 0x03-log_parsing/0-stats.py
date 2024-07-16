@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """
-This script parses log files and generates statistics on the HTTP status codes and total file size.
+This script parses log files and
+generates statistics on the HTTP status codes and total file size.
 """
 
 import sys
@@ -37,7 +38,7 @@ if __name__ == '__main__':
                 # Ignore any errors parsing the status code
                 pass
             try:
-                # Extract the file size from the log line and add it to the total
+                # Extract the file size and add it to the total
                 filesize += int(data[-1])
             except BaseException:
                 # Ignore any errors parsing the file size
