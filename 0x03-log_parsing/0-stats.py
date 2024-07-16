@@ -1,9 +1,11 @@
 #!/usr/bin/python3
 """
-Log parsing script that reads from stdin, processes log entries, and prints statistics about file sizes and HTTP status codes.
+Log parsing script that reads from stdin, processes log entries
+and prints statistics about file sizes and HTTP status codes.
 """
 
 import sys
+
 
 def main():
     """
