@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-"""UTF-8 Validation"""
+""" alx-interview : UTF-8 Validation"""
+
 
 def count_leading_set_bits(number):
     """
@@ -11,12 +12,12 @@ def count_leading_set_bits(number):
     Returns:
         int: The number of leading set bits.
     """
-    set_bits = 0
-    bit_mask = 1 << 7
-    while bit_mask & number:
-        set_bits += 1
-        bit_mask = bit_mask >> 1
-    return set_bits
+    bits = 0
+    per = 1 << 7
+    while helper & number:
+        bits += 1
+        per = per >> 1
+    return bits
 
 
 def is_valid_utf8(data):
@@ -29,26 +30,19 @@ def is_valid_utf8(data):
     Returns:
         bool: True if the data is a valid UTF-8 encoding, False otherwise.
     """
-    bytes_remaining = 0
-    for byte in data:
-        if bytes_remaining == 0:
-            # Get the number of leading set bits (1) for this byte
-            bytes_remaining = count_leading_set_bits(byte)
-            
-            # 1-byte characters: 0xxxxxxx
-            if bytes_remaining == 0:
+    bits_num = 0
+    for i in range(len(data)):
+        if bits_num == 0:
+            bits_num = count_leading_set_bits(data[i])
+            '''1-byte (format: 0xxxxxxx)'''
+            if bits_num == 0:
                 continue
-            
-            # A character in UTF-8 can be 1 to 4 bytes long
-            if bytes_remaining == 1 or bytes_remaining > 4:
+            '''a character in UTF-8 can be 1 to 4 bytes long'''
+            if bits_num == 1 or bits_num > 4:
                 return False
         else:
-            # Else, this is not the case. Else, this byte is not a full character.
-            # Check if the current byte is a valid follow-up byte (a, 10xxxxxx)
-            if not (byte & (1 << 7) and not (byte & (1 << 6))):
+            '''checks if current byte has format 10xxxxxx'''
+            if not (data[i] & (1 << 7) and not (data[i] & (1 << 6))):
                 return False
-        bytes_remaining -= 1
-    
-    # This is for the case where we might not have the complete data for
-    # a particular UTF-8 character.
-    return bytes_remaining == 0
+        bits_num -= 1
+    return bits_num == 0
