@@ -34,14 +34,11 @@ def is_valid_utf8(data):
     for i in range(len(data)):
         if bits_num == 0:
             bits_num = count_leading_set_bits(data[i])
-            '''1-byte (format: 0xxxxxxx)'''
             if bits_num == 0:
                 continue
-            '''a character in UTF-8 can be 1 to 4 bytes long'''
             if bits_num == 1 or bits_num > 4:
                 return False
         else:
-            '''checks if current byte has format 10xxxxxx'''
             if not (data[i] & (1 << 7) and not (data[i] & (1 << 6))):
                 return False
         bits_num -= 1
