@@ -14,7 +14,7 @@ def count_leading_set_bits(number):
     """
     bits = 0
     per = 1 << 7
-    while helper & number:
+    while per & number:
         bits += 1
         per = per >> 1
     return bits
