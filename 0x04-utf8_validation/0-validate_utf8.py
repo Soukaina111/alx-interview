@@ -5,10 +5,10 @@
 def count_leading_set_bits(number):
     """
     Counts the number of leading set bits (1) in a given number.
-    
+
     Args:
         number (int): The number to check.
-    
+
     Returns:
         int: The number of leading set bits.
     """
@@ -23,10 +23,10 @@ def count_leading_set_bits(number):
 def validUTF8(data):
     """
     Determines if a given data set represents a valid UTF-8 encoding.
-    
+
     Args:
         data (list): A list of integers representing the data to be checked.
-    
+
     Returns:
         bool: True if the data is a valid UTF-8 encoding, False otherwise.
     """
