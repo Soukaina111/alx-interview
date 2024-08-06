@@ -4,12 +4,12 @@
 const request = require('request');
 
 // Define a recursive function to handle the character requests
-const fetchCharacterNames = (characterUrls, index) => {
+const req = (dt, i) => {
   // Base case: if we've reached the end of the array, return
-  if (index === characterUrls.length) return;
+  if (i === dt.length) return;
 
   // Make a request to the current character URL
-  request(characterUrls[index], (err, response, body) => {
+  request(dt[i], (err, response, body) => {
     // Handle any errors that occur during the request
     if (err) {
       throw err;
@@ -18,7 +18,7 @@ const fetchCharacterNames = (characterUrls, index) => {
       console.log(JSON.parse(body).name);
 
       // Recursively call the function with the next character URL
-      fetchCharacterNames(characterUrls, index + 1);
+      req(dt, i + 1);
     }
   });
 };
@@ -32,10 +32,10 @@ request(
       throw err;
     } else {
       // Parse the response body as JSON and get the character URLs
-      const characterUrls = JSON.parse(body).characters;
+      const characts = JSON.parse(body).characters;
 
       // Call the recursive function to fetch the character names
-      fetchCharacterNames(characterUrls, 0);
+      req(characts, 0);
     }
   }
 );
