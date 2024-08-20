@@ -17,12 +17,11 @@ def makeChange(coins, total):
         return 0
 
     verf = 0
-    axe  = 0
+    axe = 0
 
     # Sort the coins in descending order to use the largest coins first
     coins.sort(reverse=True)
 
-   
     for i in coins:
         while verf < total:
             verf += i
